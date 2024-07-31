@@ -1,0 +1,51 @@
+-- COUNT OF SESSIONS ON DB EVERY 5 MINUTES
+
+/* GV$ACTIVE_SESSION_HISTORY */
+
+SELECT
+    MACHINE,
+    ACTION,
+    COUNT(DISTINCT SESSION_ID || '_' || SESSION_SERIAL#) AS session_count,
+    TO_CHAR(
+        TRUNC(SAMPLE_TIME, 'HH24') + FLOOR((EXTRACT(MINUTE FROM SAMPLE_TIME) / 5)) * INTERVAL '5' MINUTE,
+        'YYYY-MM-DD HH:MI AM'
+    ) AS time_interval
+FROM
+    GV$ACTIVE_SESSION_HISTORY
+WHERE
+    MACHINE like '%isg%' -- Replace with your specific machine name
+GROUP BY
+    MACHINE,
+    ACTION,
+    TRUNC(SAMPLE_TIME, 'HH24') + FLOOR((EXTRACT(MINUTE FROM SAMPLE_TIME) / 5)) * INTERVAL '5' MINUTE
+ORDER BY
+    time_interval,
+    MACHINE,
+    ACTION;
+	
+
+
+/* DBA_HIST_ACTIVE_SESS_HISTORY */
+	
+	
+SELECT
+    MACHINE,
+    ACTION,
+    COUNT(DISTINCT SESSION_ID || '_' || SESSION_SERIAL#) AS session_count,
+    TO_CHAR(
+        TRUNC(SAMPLE_TIME, 'HH24') + FLOOR((EXTRACT(MINUTE FROM SAMPLE_TIME) / 5)) * INTERVAL '5' MINUTE,
+        'YYYY-MM-DD HH:MI AM'
+    ) AS time_interval
+FROM
+    DBA_HIST_ACTIVE_SESS_HISTORY
+WHERE
+    MACHINE like '%isg%'
+    AND SAMPLE_TIME >= SYSDATE - 1-- Replace with your specific machine name
+GROUP BY
+    MACHINE,
+    ACTION,
+    TRUNC(SAMPLE_TIME, 'HH24') + FLOOR((EXTRACT(MINUTE FROM SAMPLE_TIME) / 5)) * INTERVAL '5' MINUTE
+ORDER BY
+    time_interval,
+    MACHINE,
+    ACTION;
