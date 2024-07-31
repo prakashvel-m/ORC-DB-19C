@@ -31,3 +31,24 @@ WHERE
     AND o.object_type = 'TABLE'
 ORDER BY
     l.ctime DESC;
+
+
+
+
+select
+   c.owner,
+   c.object_name,
+   c.object_type,
+   b.sid,
+   b.serial#,
+   b.status,
+   b.osuser,
+   b.machine
+from
+   gv$locked_object a ,
+   gv$session b,
+   dba_objects c
+where
+   b.sid = a.session_id
+and
+   a.object_id = c.object_id and object_name in ('OBJECT_NAME');
