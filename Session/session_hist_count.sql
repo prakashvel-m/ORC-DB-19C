@@ -3,7 +3,6 @@ SELECT
     MAX(end_time) end_time,
     DECODE(event, NULL, 'ON CPU', event) event,
     sql_id,
-    SQL_OPNAME,
     COUNT(DISTINCT(sql_id)) sql_cnt,
     SUM(DECODE(session_state, 'ON CPU', 1, 0)) cnt_on_cpu,
     SUM(DECODE(session_state, 'WAITING', 1, 0)) cnt_waiting
@@ -16,15 +15,13 @@ FROM (
         ) end_time,
         event,
         session_state,
-        sql_id,
-        SQL_OPNAME
+        sql_id
     FROM (
         SELECT *
-        FROM GV$ACTIVE_SESSION_HISTORY ash
-        WHERE session_id = 3571
-        AND session_serial# = 57114
-        AND CLIENT_ID='502025410'
+        FROM gv$active_session_history ash
+        WHERE session_id = 5130
+        AND session_serial# = 28962
     )
 )
-GROUP BY DECODE(event, NULL, 'ON CPU', event), sql_id,SQL_OPNAME
+GROUP BY DECODE(event, NULL, 'ON CPU', event), sql_id
 ORDER BY 3, 2, 4;
