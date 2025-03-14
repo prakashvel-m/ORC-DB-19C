@@ -22,3 +22,23 @@ SELECT component, min(final_size) low, (min(final_size/1024/1024)) lowMB,
 FROM   v$sga_resize_ops
 GROUP BY component
 ORDER BY component;
+
+
+SELECT 
+    component, 
+    parameter, 
+    initial_size/1024/1024 as init_mb, 
+    final_size/1024/1024 as final_mb, 
+    status,
+    CASE 
+        WHEN final_size > initial_size THEN 'Increase ↑'
+        WHEN final_size < initial_size THEN 'Decrease ↓'
+        ELSE 'No Change'
+    END AS Summary, 
+    end_time,
+    sysdate AS current_time
+    
+FROM 
+    gv$sga_resize_ops
+ORDER BY 
+    end_time DESC;
