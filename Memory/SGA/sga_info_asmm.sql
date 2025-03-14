@@ -1,3 +1,26 @@
+/*Automatic Shared Memory Management (ASMM) is a feature of the Oracle database 10g that automates the management of the following shared memory structures:  DB_CACHE_SIZE, SHARED_POOL_SIZE, LARGE_POOL_SIZE, JAVA_POOL_SIZE, and STREAMS_POOL_SIZE (in 10.2 and beyond).
+
+NOTE:
+ASSM as described is still available in Oracle 11g but has been further developed to Automatic Memory Management (AMM). AMM also takes PGA memory into account for automatic tuning.
+
+When implemented, ASMM will enable the Oracle database to distribute memory between these components based on workload requirements.  Hence, these components are considered autotuned parameters. The background process, Memory Manager (MMAN), coordinates the sizing of these components and moves memory to where it is needed most.
+
+To implement this feature, the following initialization parameters must be set:
+
+SGA_TARGET set to a nonzero value
+STATISTICS_LEVEL=TYPICAL (or ALL)
+ 
+
+NOTE:
+SGA_TARGET is a dynamic parameter and be changed with the ALTER SYSTEM command.  It can be increased up to the value of the SGA_MAX_SIZE or reduced until any one of the autotuned parameters reaches its minimum size.  SGA_MAX_SIZE is the maximum amount of memory that can be allocated to the SGA.
+When these values are not set, ASMM is disabled and the autotuned parameters must be configured manually. When ASMM is implemented, the default value of the autotuned parameters is zero unless a value has been set.  If a value is specified, it will be used as a minimum size.
+
+The Fixed SGA and the following components are not considered autotuned parameters and are not a part of the ASMM feature. These are considered manually tuned memory parameters: LOG_BUFFER, DB_KEEP_CACHE_SIZE, DB_RECYCLE_CACHE_SIZE, DB_nK_CACHE_SIZE, and STREAMS_POOL_SIZE (in 10.1).
+
+When the SGA_TARGET is set, the total size for these manually tuned parameters is subtracted from SGA_TARGET and the balance remaining is available for the autotuned SGA components. 
+
+*/
+
 
 -- 1) Select the current settings of parameters from the database.
 
