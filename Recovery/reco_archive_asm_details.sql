@@ -6,6 +6,9 @@ SELECT
    ROUND((SPACE_RECLAIMABLE / 1024 / 1024 / 1024),2) "Reclaimable (GB)",
    NUMBER_OF_FILES "Files"
 FROM V$RECOVERY_FILE_DEST;
+
+ select * from v$recovery_area_usage;
+
  
 -- CHECK FRA INDIVIDUAL SPECIFIC DETAILS
  
